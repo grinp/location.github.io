@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+   	<link rel="stylesheet" href="leaflet/leaflet.css"/>
+    <script src="leaflet/leaflet.js"></script>
+  	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/trafforddatalab/leaflet.reachability@v2.0.0/leaflet.reachability.css"/>
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<script src="https://cdn.jsdelivr.net/gh/trafforddatalab/leaflet.reachability@v2.0.0/leaflet.reachability.js"></script>
+	<style>
+		#mapid { 
+				position: absolute;
+            	top: 0;
+            	left: 0;
+            	width: 100%;
+            	height: 100%;
+		 		}
+	 
+	</style>
+
+</head>
+
+<body>
+	
+<div id="mapid"></div>
+	
+<script>
+		
+    var mymap = L.map('mapid').setView([55.7391632,37.6118729], 10.44);
+    
+   	L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+	      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	      subdomains: 'abcd',
+	      maxZoom: 19
+    }).addTo(mymap);
+	
+	
+	
+	
+	// Function to return a colour based on the 'Range' value of the reachability polygons
+	function getColourByRange(value) {
+    	switch (value) {
+        	case 5:
+            	return '#23E500';
+        	case 10:
+            	return '#89DB00';
+        	case 15:
+            	return '#D2BD00';
+        	case 20:
+            	return '#C85600';
+        	case 25:
+            	return '#BF0007';
+        	default:
+            	return '#00ffff'
+    	}
+	}
+
+	// Function to style the reachability polygons
+	function styleIsolines(feature) {
+    	// Get the value of the range property of the feature
+    	var rangeVal = feature.properties['Range'];
+    	// If the range is based on distance, multiply the value by 10 to match the time range values
+    	if (feature.properties['Measure'] == 'distance') rangeVal = rangeVal * 10;
+
+    	return {
+        	color: getColourByRange(rangeVal),
+        	opacity: 0.5,
+        	fillOpacity: 0.2
+    	};
+	}
+
+	
+	
+
+        // Initialise the reachability plugin
+    L.control.reachability({
+            // add settings/options here
+    apiKey: '5b3ce3597851110001cf624831d95ece15f54cdd8cf5461c7fcfa631',
+    travelModeButton1Content: '',
+    travelModeButton1StyleClass: 'fa fa-car fa-2x',
+    travelModeButton2Content: '',
+    travelModeButton2StyleClass: 'fa fa-bicycle fa-2x',
+    travelModeButton3Content: '',
+    travelModeButton3StyleClass: 'fa fa-male fa-2x',
+    travelModeProfile4: null,
+    drawButtonContent: '',
+    drawButtonStyleClass: 'fa fa-map-marker fa-2x',
+    deleteButtonContent: '',
+    deleteButtonStyleClass: 'fa fa-trash-o fa-2x',
+    distanceButtonContent: '',
+    distanceButtonStyleClass: 'fa fa-road fa-2x',
+    timeButtonContent: '',
+    timeButtonStyleClass: 'fa fa-clock-o fa-2x',
+    styleFn: styleIsolines,
+    }).addTo(mymap);
+    
+    
+</script>
+
+
+</body>
+</html>
